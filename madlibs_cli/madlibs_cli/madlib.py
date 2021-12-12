@@ -28,33 +28,50 @@ def find_matching_words(words_to_match):
   matches = re.findall('{.+?}', str(words_to_match))
   return matches
 
-def replace_matching_words(words_to_match):
-  matches = re.findall('{.+?}', str(words_to_match))
+def replace_matching_words(words_to_replace):
+  matches = re.findall('{.+?}', str(words_to_replace))
   for i in range(len(matches)):
     while matches == i:
       matches[i] = user_input_list[i]
-
   # return replaced_words
 
 # prompts user for input of requested word types
-def get_user_input():
-  for i in matched_words:
-    user_input = input('Please enter a {}'.format(i))
+def get_user_input(user_strings):
+  matching_strings = re.findall('{.+?}', user_strings)
+  for i in range(len(matching_strings)):
+    user_input = input('Please enter a {}'.format(matching_strings[i]))
     user_input_list.append(user_input)
   return user_input_list
 
-# Opening the mad libs text file
-with open('madlibs_cli/assets/dark_and_stormy_night_template.txt') as template:
-  parsed_list = []
-  contents = template.readlines()
-# parses contents and splits the words into a list, then finds words that are inside of {}
-  for line in contents:
-    for parsed_text in line.split():
-      parsed_list.append(parsed_text)
-      matched_words = find_matching_words(parsed_list)
+def replace_words(passed_string):
+  matching_strings = re.findall('{.+?}', passed_string)
+  matched_length = len(matching_strings)
+  for i in range(matched_length):
+    if i == 0:
+      new_text = passed_string.replace(matching_strings[i], user_input_list[i])
+    else:
+      new_text = new_text.replace(matching_strings[i], user_input_list[i])
+  return new_text
+  
+  
+  
+def get_string():
+  # Opening the mad libs text file
+  with open('madlibs_cli/assets/dark_and_stormy_night_template.txt') as template:
+    return template.read()
+  #   parsed_list = []
+  #   contents = template.readlines()
+  # # parses contents and splits the words into a list, then finds words that are inside of {}
+  #   for line in contents:
+  #     for parsed_text in line.split():
+  #       parsed_list.append(parsed_text)
+  #       matched_words = find_matching_words(parsed_list)
+        
 
 # Prompt the user to submit a series of words to fit each of the required components of the Madlib template.
-get_user_input()
+get_user_input(get_string())
+print(replace_words(get_string()))
+
   
 # With the collected user inputs, populate the template such that each provided input is placed into the correct position within the template.
 with open('madlibs_cli/assets/dark_and_stormy_night_template.txt') as to_be_replaced:
